@@ -1,14 +1,17 @@
 Paddle paddle;
 Ball ball;
+color black;
 
 void setup(){
   size(800,600);
-  background(0); // set backgroud color : black 
+  black = color(0); // set rgb color : black
+  background(black);
   paddle = new Paddle();
   ball = new Ball();
 }
 
 void draw(){
+  background(black);
   ball.draw();
   paddle.draw();
 }
@@ -53,9 +56,22 @@ class Paddle{
   void draw(){
     rect(pos1X, pos1Y, sizeWidth, sizeHeight);
     rect(pos2X, pos2Y, sizeWidth, sizeHeight);
+    this.move();
   }
   
-  void move(float posX, float posY){
+  void move(){
+    if (mousePressed == true){
+      if (pos1X <= mouseX && mouseX <= pos1X+sizeWidth && pos1Y <= mouseY && mouseY <= pos1Y+sizeHeight){
+        // when mouse pressed paddle player1 (paddle left)
+        float distY = pos1Y+(sizeHeight/2)- mouseY; // distance between mouseY and posY of paddle left
+        pos1Y -= distY;
+      }
+      else if(pos2X <= mouseX && mouseX <= pos2X+sizeWidth && pos2Y <= mouseY && mouseY <= pos2Y+sizeHeight){
+        // when mouse pressed paddle player2 (paddle right)
+        float distY = pos2Y+(sizeHeight/2)- mouseY; // distance between mouseY and posY of paddle right
+        pos2Y -= distY;
+      }
+    }
   }
   
 }
