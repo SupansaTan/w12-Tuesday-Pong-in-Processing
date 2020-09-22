@@ -54,22 +54,26 @@ class Paddle{
   }
   
   void draw(){
-    rect(pos1X, pos1Y, sizeWidth, sizeHeight);
-    rect(pos2X, pos2Y, sizeWidth, sizeHeight);
-    this.move();
+    if (mousePressed == true){
+      this.move();
+    }
+    rect(pos1X, pos1Y, sizeWidth, sizeHeight); // paddle left (player1)
+    rect(pos2X, pos2Y, sizeWidth, sizeHeight); // paddle right (player2)
   }
   
   void move(){
-    if (mousePressed == true){
-      if (pos1X <= mouseX && mouseX <= pos1X+sizeWidth && pos1Y <= mouseY && mouseY <= pos1Y+sizeHeight){
+    float dist1Y = pos1Y+(sizeHeight/2)- mouseY;  // distance between mouseY and center posY of paddle left
+    float dist2Y = pos2Y+(sizeHeight/2)- mouseY;  // distance between mouseY and center posY of paddle right
+    
+    //check the paddle don't beyond the edge
+    if (0 <= pos1Y-dist1Y && pos1Y-dist1Y+sizeHeight <= height || 0 <= pos2Y-dist2Y && pos2Y-dist2Y+sizeHeight <= height){
+       if (pos1X <= mouseX && mouseX <= pos1X+sizeWidth && pos1Y <= mouseY && mouseY <= pos1Y+sizeHeight){
         // when mouse pressed paddle player1 (paddle left)
-        float distY = pos1Y+(sizeHeight/2)- mouseY; // distance between mouseY and posY of paddle left
-        pos1Y -= distY;
+        pos1Y -= dist1Y;
       }
       else if(pos2X <= mouseX && mouseX <= pos2X+sizeWidth && pos2Y <= mouseY && mouseY <= pos2Y+sizeHeight){
         // when mouse pressed paddle player2 (paddle right)
-        float distY = pos2Y+(sizeHeight/2)- mouseY; // distance between mouseY and posY of paddle right
-        pos2Y -= distY;
+        pos2Y -= dist2Y;
       }
     }
   }
