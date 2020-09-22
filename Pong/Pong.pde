@@ -1,12 +1,15 @@
 Paddle paddle;
+Ball ball;
 
 void setup(){
   size(800,600);
   background(0); // set backgroud color : black 
   paddle = new Paddle();
+  ball = new Ball();
 }
 
 void draw(){
+  ball.draw();
   paddle.draw();
 }
 
@@ -23,6 +26,7 @@ class Ball{
   }
   
   void draw(){
+    circle(posX, posY, size);
   }
   
   void move(float posX, float posY, float direction){
