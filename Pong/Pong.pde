@@ -1,9 +1,13 @@
+Paddle paddle;
+
 void setup(){
   size(800,600);
   background(0); // set backgroud color : black 
+  paddle = new Paddle();
 }
 
 void draw(){
+  paddle.draw();
 }
 
 class Ball{
@@ -31,14 +35,20 @@ class Ball{
 }
 
 class Paddle{
-  float posX, posY, sizeWidth, sizeHeight;
+  float pos1X, pos1Y, pos2X, pos2Y, sizeWidth, sizeHeight;
   
   Paddle(){
-    sizeWidth = 20;
-    sizeHeight = 80;
+    sizeWidth = 30;
+    sizeHeight = 200;
+    pos1X = 0;
+    pos1Y = height/2 - sizeHeight/2;
+    pos2X = width - sizeWidth;
+    pos2Y = height/2 - sizeHeight/2;
   }
   
   void draw(){
+    rect(pos1X, pos1Y, sizeWidth, sizeHeight);
+    rect(pos2X, pos2Y, sizeWidth, sizeHeight);
   }
   
   void move(float posX, float posY){
