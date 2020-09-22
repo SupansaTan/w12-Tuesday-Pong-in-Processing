@@ -29,18 +29,37 @@ class Ball{
     posX = width/2;
     posY = height/2;
     size = 30;
+    direction = 1;
     velocity = 1;
   }
   
   void draw(){
     circle(posX, posY, size);
+    this.move();
   }
   
-  void move(float posX, float posY, float direction){
+  void move(){
+    if (this.bounce(this.posX, this.posY) == true){
+      // when the ball bounce with the paddle
+        direction = -1 * direction; 
+    }
+    this.posX += 5 * velocity * direction; // increase or decrease of position x 
   }
   
   boolean bounce(float posX, float posY){
-    return true;
+    if (posX-this.size/2 == paddle.pos1X+paddle.sizeWidth && paddle.pos1Y <= posY && posY <= paddle.pos2Y + paddle.sizeHeight){
+      // if the ball bounce with paddle left
+      return true;
+    }
+    else if(posX+this.size/2 == paddle.pos2X && paddle.pos2Y <= posY && posY <= paddle.pos2Y + paddle.sizeHeight){
+      // if the ball bounce with paddle right
+      return true;
+    }
+    else if(posX == 0 || posX == width || posY == 0 || posY == height){
+      // if the ball bounce with the edge of widget
+      return true;
+    }
+    return false;
   }
   
 }
