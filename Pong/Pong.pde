@@ -1,5 +1,7 @@
 Paddle paddle;
 Ball ball;
+PongGame startGame;
+
 color black;
 
 void setup(){
@@ -8,10 +10,12 @@ void setup(){
   background(black);
   paddle = new Paddle();
   ball = new Ball();
+  startGame = new PongGame();
 }
 
 void draw(){
   background(black);
+  startGame.draw();
   ball.draw();
   paddle.draw();
 }
@@ -67,7 +71,7 @@ class Paddle{
     
     //check the paddle don't beyond the edge
     if (0 <= pos1Y-dist1Y && pos1Y-dist1Y+sizeHeight <= height || 0 <= pos2Y-dist2Y && pos2Y-dist2Y+sizeHeight <= height){
-       if (pos1X <= mouseX && mouseX <= pos1X+sizeWidth && pos1Y <= mouseY && mouseY <= pos1Y+sizeHeight){
+      if (pos1X <= mouseX && mouseX <= pos1X+sizeWidth && pos1Y <= mouseY && mouseY <= pos1Y+sizeHeight){
         // when mouse pressed paddle player1 (paddle left)
         pos1Y -= dist1Y;
       }
@@ -82,11 +86,23 @@ class Paddle{
 
 class PongGame {
   int player1, player2; // contain score of each player
+  int size; 
   
   PongGame(){
     //set start score
     player1 = 0;
     player2 = 0;
+    size = 10; // set width of rectangle at center
+  }
+  
+  void draw(){
+    // rectangle at center
+    rect(width/2 - size/2,0,size,height);
+    
+    // show score
+    textSize(50);
+    text(player1, width/2 - width/4, height/8);
+    text(player2, width/2 + width/5, height/8);
   }
   
   void updateScore(){
