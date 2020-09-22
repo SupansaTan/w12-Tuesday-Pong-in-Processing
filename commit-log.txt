@@ -1,0 +1,11 @@
+commit 6b8edd5feffe7042a39bc5bf098c0570b1b35127
+Author: Supansa Tantulset <s6201012620236@email.kmutnb.ac.th>
+Date:   Tue Sep 22 14:28:51 2020 +0700
+
+    Add arguments in some method and set size, background color
+
+commit e80680d868b0e87ed200bd95a82517da7670f39a
+Author: Supansa Tantulset <s6201012620236@email.kmutnb.ac.th>
+Date:   Tue Sep 22 13:42:26 2020 +0700
+
+    Class design
