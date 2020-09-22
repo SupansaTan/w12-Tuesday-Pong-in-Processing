@@ -1,12 +1,13 @@
 void setup(){
-  size(500,500);
+  size(800,600);
+  background(0); // set backgroud color : black 
 }
 
 void draw(){
 }
 
 class Ball{
-  float posX, posY, size;
+  float posX, posY, size, direction;
   int velocity;
   
   Ball(){
@@ -20,12 +21,13 @@ class Ball{
   void draw(){
   }
   
-  void move(){
+  void move(float posX, float posY, float direction){
   }
   
-  boolean bounce(){
+  boolean bounce(float posX, float posY){
     return true;
   }
+  
 }
 
 class Paddle{
@@ -39,8 +41,9 @@ class Paddle{
   void draw(){
   }
   
-  void move(){
+  void move(float posX, float posY){
   }
+  
 }
 
 class PongGame {
