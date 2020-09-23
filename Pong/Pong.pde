@@ -46,6 +46,14 @@ class Ball{
     this.posX += 5 * velocity * direction; // increase or decrease of position x 
   }
   
+  float getX(){
+    return this.posX;
+  }
+  
+  float getY(){
+    return this.posY;
+  }
+  
   boolean bounce(float posX, float posY){
     if (posX-this.size/2 == paddle.pos1X+paddle.sizeWidth && paddle.pos1Y <= posY && posY <= paddle.pos2Y + paddle.sizeHeight){
       // if the ball bounce with paddle left
@@ -57,6 +65,14 @@ class Ball{
     }
     else if(posX == 0 || posX == width || posY == 0 || posY == height){
       // if the ball bounce with the edge of widget
+      return true;
+    }
+    return false;
+  }
+  
+  boolean bounceEdge(){
+    if(posX == 0 || posX == width){
+      // if the ball bounce with left or right edge of widget
       return true;
     }
     return false;
@@ -122,9 +138,22 @@ class PongGame {
     textSize(50);
     text(player1, width/2 - width/4, height/8);
     text(player2, width/2 + width/5, height/8);
+    
+    this.updateScore();
   }
   
   void updateScore(){
+    // when the ball bounce with left or right edge of widget 
+    if(ball.bounceEdge() == true){
+      if (ball.getX() == 0){
+        // player2 get score
+        player2 += 1;
+      }
+      else if (ball.getX() == width){
+        // player1 get score
+        player1 += 1;
+      }
+    }
   }
   
 }
