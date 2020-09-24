@@ -1,16 +1,15 @@
+PongGame startGame;
 Paddle paddle;
 Ball ball;
-PongGame startGame;
-
 color black;
 
 void setup(){
   size(800,600);
   black = color(0); // set rgb color : black
   background(black);
+  startGame = new PongGame();
   paddle = new Paddle();
   ball = new Ball();
-  startGame = new PongGame();
 }
 
 void draw(){
@@ -22,7 +21,7 @@ void draw(){
 
 class Ball{
   float posX, posY, size, direction;
-  int velocity;
+  int velocity, degree = 0;
   
   Ball(){
     // set ball at center position
@@ -34,16 +33,15 @@ class Ball{
   }
   
   void draw(){
-    circle(posX, posY, size);
     this.move();
+    circle(posX, posY, size);
   }
   
   void move(){
-    if (this.bounce(this.posX, this.posY) == true){
-      // when the ball bounce with the paddle
-        direction = -1 * direction; 
-    }
-    this.posX += 5 * velocity * direction; // increase or decrease of position x 
+    this.bounce();
+    
+    this.posX += 5 * velocity * direction * cos(radians(degree)); 
+    this.posY += 5 * velocity * direction * sin(radians(degree));
   }
   
   float getX(){
@@ -54,24 +52,47 @@ class Ball{
     return this.posY;
   }
   
-  boolean bounce(float posX, float posY){
-    if (posX-this.size/2 == paddle.pos1X+paddle.sizeWidth && paddle.pos1Y <= posY && posY <= paddle.pos2Y + paddle.sizeHeight){
+  float bounce(){
+    if (this.posX-this.size/2 <= paddle.pos1X+paddle.sizeWidth && (paddle.pos1Y <= this.posY && this.posY <= paddle.pos1Y + paddle.sizeHeight)){
       // if the ball bounce with paddle left
-      return true;
+      direction = -1 * direction;
+      float distPos = paddle.pos1Y - paddle.lastPos1Y;
+      
+      if(distPos < 0){
+        // paddle is moved up
+        degree = 10;
+      }
+      else if(distPos > 0){
+        // paddle is moved down
+        degree = -10;
+      }  
+      return degree;
     }
-    else if(posX+this.size/2 == paddle.pos2X && paddle.pos2Y <= posY && posY <= paddle.pos2Y + paddle.sizeHeight){
+    else if(this.posX+this.size/2 >= paddle.pos2X && (paddle.pos2Y <= this.posY && this.posY <= paddle.pos2Y + paddle.sizeHeight)){
       // if the ball bounce with paddle right
-      return true;
+      direction = -1 * direction;
+      float distPos = paddle.pos2Y - paddle.lastPos2Y;
+      
+      if(distPos < 0){
+        // paddle is moved up
+        degree = 10;
+      }
+      else if(distPos > 0){
+        // paddle is moved down
+        degree = -10;
+      }    
+      return degree;
     }
-    else if(posX == 0 || posX == width || posY == 0 || posY == height){
+    else if(this.posX <= 0 || this.posX >= width || this.posY <= 0 || this.posY >= height){
       // if the ball bounce with the edge of widget
-      return true;
+      direction = -1 * direction;
+      return 0;
     }
-    return false;
+    return 0;
   }
   
   boolean bounceEdge(){
-    if(posX == 0 || posX == width){
+    if(this.posX <= 0 || this.posX >= width){
       // if the ball bounce with left or right edge of widget
       return true;
     }
@@ -82,6 +103,8 @@ class Ball{
 
 class Paddle{
   float pos1X, pos1Y, pos2X, pos2Y, sizeWidth, sizeHeight;
+  float dist1Y, dist2Y;
+  float lastPos1Y, lastPos2Y;
   
   Paddle(){
     sizeWidth = 30;
@@ -90,10 +113,12 @@ class Paddle{
     pos1Y = height/2 - sizeHeight/2;
     pos2X = width - sizeWidth;
     pos2Y = height/2 - sizeHeight/2;
+    lastPos1Y = pos1Y;
+    lastPos2Y = pos2Y;
   }
   
   void draw(){
-    if (mousePressed == true){
+    if (mousePressed){
       this.move();
     }
     rect(pos1X, pos1Y, sizeWidth, sizeHeight); // paddle left (player1)
@@ -101,20 +126,42 @@ class Paddle{
   }
   
   void move(){
-    float dist1Y = pos1Y+(sizeHeight/2)- mouseY;  // distance between mouseY and center posY of paddle left
-    float dist2Y = pos2Y+(sizeHeight/2)- mouseY;  // distance between mouseY and center posY of paddle right
+    dist1Y = pos1Y+(sizeHeight/2)- mouseY;  // distance between mouseY and center posY of paddle left
+    dist2Y = pos2Y+(sizeHeight/2)- mouseY;  // distance between mouseY and center posY of paddle right
     
-    //check the paddle don't beyond the edge
-    if (0 <= pos1Y-dist1Y && pos1Y-dist1Y+sizeHeight <= height || 0 <= pos2Y-dist2Y && pos2Y-dist2Y+sizeHeight <= height){
-      if (pos1X <= mouseX && mouseX <= pos1X+sizeWidth && pos1Y <= mouseY && mouseY <= pos1Y+sizeHeight){
+    //check the paddles don't beyond the edge
+    if (0 <= this.pos1Y-dist1Y && this.pos1Y-dist1Y+this.sizeHeight <= height || 0 <= this.pos2Y-dist2Y && this.pos2Y-dist2Y+this.sizeHeight <= height){
+      if (this.pos1X <= mouseX && mouseX <= this.pos1X+this.sizeWidth && this.pos1Y <= mouseY && mouseY <= this.pos1Y+this.sizeHeight){
         // when mouse pressed paddle player1 (paddle left)
-        pos1Y -= dist1Y;
+        lastPos1Y = this.pos1Y;
+        this.pos1Y -= dist1Y;
       }
-      else if(pos2X <= mouseX && mouseX <= pos2X+sizeWidth && pos2Y <= mouseY && mouseY <= pos2Y+sizeHeight){
+      else if(this.pos2X <= mouseX && mouseX <= this.pos2X+this.sizeWidth && this.pos2Y <= mouseY && mouseY <= this.pos2Y+this.sizeHeight){
         // when mouse pressed paddle player2 (paddle right)
-        pos2Y -= dist2Y;
+        lastPos2Y = this.pos2Y;
+        this.pos2Y -= dist2Y;
       }
     }
+  }
+  
+  float getPos(int numPaddle, String pos){
+    if (numPaddle == 1){
+      if(pos == "X"){
+        return pos1X;
+      }
+      else{
+        return pos1Y;
+      }
+    }
+    else if (numPaddle == 2){
+      if(pos == "X"){
+        return pos2X;
+      }
+      else{
+        return pos2Y;
+      }
+    }
+    return 0;
   }
   
 }
@@ -122,6 +169,7 @@ class Paddle{
 class PongGame {
   int player1, player2; // contain score of each player
   int size; 
+  
   
   PongGame(){
     //set start score
@@ -145,13 +193,13 @@ class PongGame {
   void updateScore(){
     // when the ball bounce with left or right edge of widget 
     if(ball.bounceEdge() == true){
-      if (ball.getX() == 0){
+      if (ball.getX() <= 0){
         // player2 get score
-        player2 += 1;
+        this.player2 += 1;
       }
-      else if (ball.getX() == width){
+      else if (ball.getX() >= width){
         // player1 get score
-        player1 += 1;
+        this.player1 += 1;
       }
     }
   }
