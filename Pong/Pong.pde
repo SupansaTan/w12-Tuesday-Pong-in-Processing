@@ -60,12 +60,17 @@ class Ball{
       
       if(distPos < 0){
         // paddle is moved up
+        velocity = 1;
         degree = 10;
       }
       else if(distPos > 0){
         // paddle is moved down
+        velocity = 1;
         degree = -10;
-      }  
+      }
+      else{
+        velocity += 0.5;
+      }
       return degree;
     }
     else if(this.posX+this.size/2 >= paddle.pos2X && (paddle.pos2Y <= this.posY && this.posY <= paddle.pos2Y + paddle.sizeHeight)){
@@ -75,12 +80,17 @@ class Ball{
       
       if(distPos < 0){
         // paddle is moved up
+        velocity = 1;
         degree = 10;
       }
       else if(distPos > 0){
         // paddle is moved down
+        velocity = 1;
         degree = -10;
-      }    
+      }
+      else{
+        velocity += 1;
+      }
       return degree;
     }
     else if(this.posX <= 0 || this.posX >= width || this.posY <= 0 || this.posY >= height){
