@@ -161,8 +161,11 @@ class Wall {
     rect(posX,posY,20,70);
   }
   
-  boolean isBlock(){
-    return true;
+  boolean isBlock(int x, int y){
+    if (posX + 20 <= x && posY <= y && y <= posY + 40){
+      return true;
+    }
+    return false;
   }
 }
 
