@@ -1,6 +1,7 @@
 PongGame startGame;
 Paddle paddle;
 Ball ball;
+Wall[] wall;
 color black;
 
 void setup(){
@@ -10,6 +11,12 @@ void setup(){
   startGame = new PongGame();
   paddle = new Paddle();
   ball = new Ball();
+  wall = new Wall[2];
+  
+  for (int i=0; i<2 ;i++){
+    wall[i] = new Wall();
+  }
+  
 }
 
 void draw(){
@@ -17,6 +24,10 @@ void draw(){
   startGame.draw();
   ball.draw();
   paddle.draw();
+  
+  for( Wall w : wall){
+    w.draw();
+  }
 }
 
 class Ball{
@@ -73,7 +84,7 @@ class Ball{
       }
       return degree;
     }
-    else if(this.posX <= 0 || this.posX >= width || this.posY <= 0 || this.posY >= height){
+    else if(this.posX <= 0|| this.posY <= 0 || this.posY >= height){
       // if the ball bounce with the edge of widget
       direction = -1 * direction;
       return 0;
@@ -135,7 +146,24 @@ class Paddle{
     }
     return 0;
   }
+}
+
+class Wall {
+  int posX, posY;
   
+  Wall(){
+    posX = (int)random(width/2);
+    posY = (int)random(height/2);
+  }
+  
+  void draw(){
+    fill(255);
+    rect(posX,posY,20,70);
+  }
+  
+  boolean isBlock(){
+    return true;
+  }
 }
 
 class PongGame {
@@ -163,10 +191,6 @@ class PongGame {
       if (ball.getX() <= 0){
         // player2 get score
         this.player2 += 1;
-      }
-      else if (ball.getX() >= width){
-        // player1 get score
-        this.player2 -= 1;
       }
     }
   }
